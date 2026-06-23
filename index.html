@@ -48,7 +48,26 @@
       align-items: center;
       gap: 12px;
     }
+.header-request{
+  margin-left:12px;
+  padding:8px 14px;
+  border:1px solid rgba(186,143,46,.25);
+  background:rgba(186,143,46,.08);
+  color:var(--color-brand);
+  text-decoration:none;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  transition:all .2s ease;
+  white-space:nowrap;
+}
 
+.header-request:hover{
+  background:var(--color-brand);
+  color:#fff;
+  border-color:var(--color-brand);
+  transform:translateY(-1px);
+}
     .brand-block {
       display: flex;
       flex-direction: column;
@@ -307,20 +326,31 @@
 
   <!-- HEADER -->
   <header>
-    <div class="header-left">
-      <img src="https://cdn-5d8995b3f911c90950a6130b.closte.com/wp-content/uploads/2024/08/the-seminyak-logo-aug24v1.png"
-           alt="The Seminyak"
-           style="width:40px;height:40px;object-fit:contain;border-radius:8px;">
-      <div class="brand-block">
-        <span class="brand-eyebrow">Marketing Team</span>
-        <span class="brand-name">Office Desk</span>
-      </div>
+  <div class="header-left">
+    <img src="https://cdn-5d8995b3f911c90950a6130b.closte.com/wp-content/uploads/2024/08/the-seminyak-logo-aug24v1.png"
+         alt="The Seminyak"
+         style="width:40px;height:40px;object-fit:contain;border-radius:8px;">
+
+    <div class="brand-block">
+      <span class="brand-eyebrow">Marketing Team</span>
+      <span class="brand-name">Office Desk</span>
     </div>
-    <div class="header-right">
-      <div id="clock-date">—</div>
-      <div id="clock-time">--:--</div>
-    </div>
-  </header>
+
+    <a
+      href="https://forms.gle/7H32KvAJ279XRCuTA"
+      target="_blank"
+      class="header-request"
+    >
+      Request Design
+    </a>
+
+  </div>
+
+  <div class="header-right">
+    <div id="clock-date">—</div>
+    <div id="clock-time">--:--</div>
+  </div>
+</header>
 
   <!-- MAIN -->
   <main>
