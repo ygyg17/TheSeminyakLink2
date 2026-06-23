@@ -160,40 +160,43 @@
     .link-list { display: flex; flex-direction: column; gap: 8px; }
 
     .link-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
 
-.link-info{
-  flex:1;
-  min-width:0;
-}
+    .link-card:hover {
+      border-color: var(--color-brand);
+      box-shadow: 0 0 0 3px var(--color-brand-light);
+    }
 
-.link-name{
-  font-size:14px;
-  font-weight:600;
-  color:var(--ink);
-  line-height:1.4;
-  white-space:normal;
-  word-break:break-word;
-}
+    .link-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.link-category-badge{
-  display:inline-flex;
-  margin-top:6px;
-  font-size:11px;
-  font-weight:500;
-  padding:3px 8px;
-  border-radius:100px;
-  background:var(--color-brand-light);
-  color:var(--color-brand);
-}
+    .link-category-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 100px;
+      background: var(--color-brand-light);
+      color: var(--color-brand);
+      flex-shrink: 0;
+      display: none;
+    }
 
     .link-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
@@ -405,35 +408,15 @@
       }
 
       const html = links.map(item => `
-  <div class="link-card">
-
-    <div class="link-info">
-      <div class="link-name" title="${escHtml(item.name)}">
-        ${escHtml(item.name)}
-      </div>
-
-      ${showBadge ? `
-        <span class="link-category-badge">
-          ${escHtml(item.category)}
-        </span>
-      ` : ''}
-    </div>
-
-    <div class="link-actions">
-      <button class="btn-action"
-        onclick="openLink('${escAttr(item.link)}')">
-        Open
-      </button>
-
-      <button class="btn-action copy"
-        id="copy-${escAttr(item.id)}"
-        onclick="copyLink('${escAttr(item.link)}', '${escAttr(item.id)}')">
-        Copy
-      </button>
-    </div>
-
-  </div>
-`).join('');
+        <div class="link-card">
+          <div class="link-name" title="${escHtml(item.name)}">${escHtml(item.name)}</div>
+          ${showBadge ? `<span class="link-category-badge" style="display:inline-flex">${escHtml(item.category)}</span>` : ''}
+          <div class="link-actions">
+            <button class="btn-action" onclick="openLink('${escAttr(item.link)}')">Open</button>
+            <button class="btn-action copy" id="copy-${escAttr(item.id)}"
+              onclick="copyLink('${escAttr(item.link)}', '${escAttr(item.id)}')">Copy</button>
+          </div>
+        </div>`).join('');
 
       container.innerHTML = `<div class="link-list">${html}</div>`;
     }
