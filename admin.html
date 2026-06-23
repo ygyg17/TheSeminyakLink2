@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Link Bank — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafaf9;
+      --surface: #ffffff;
+      --ink: #292524;
+      --muted: #78716c;
+      --line: #e7e5e4;
+      --color-brand: #BA8F2E;
+      --color-brand-hover: #9c7726;
+      --color-brand-light: rgba(186, 143, 46, 0.08);
+      --color-success: #10b981;
+      --color-error: #ef4444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 12px; }
+
+    .logo-placeholder {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--color-brand-light);
+      border: 1.5px solid var(--color-brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .brand-block { display: flex; flex-direction: column; line-height: 1.2; }
+
+    .brand-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-brand);
+    }
+
+    .brand-name { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .clock-block {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    #clock-time { font-size: 14px; color: var(--color-brand); font-weight: 700; }
+
+    .btn-back {
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-back:hover { border-color: var(--color-brand); color: var(--color-brand); }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--color-brand-light);
+      color: var(--color-brand);
+      border: 1px solid rgba(186,143,46,0.25);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 36px 24px 60px;
+    }
+
+    .headline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .headline h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .headline h1 span { color: var(--color-brand); }
+
+    .config-banner {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 13px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      display: none;
+    }
+    .config-banner code {
+      background: #fee2e2;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── LOGIN GATE ── */
+    #loginGate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+
+    .login-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--ink); }
+    .login-card > p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .field label { font-size: 12px; font-weight: 600; color: var(--ink); }
+
+    .field input, .field select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .field input:focus, .field select:focus {
+      border-color: var(--color-brand);
+      box-shadow: 0 0 0 3px var(--color-brand-light);
+    }
+
+    #loginError { font-size: 12px; color: var(--color-error); min-height: 18px; margin-bottom: 6px; }
+
+    /* ── ADMIN PANEL (hidden until logged in) ── */
+    #adminPanel { display: none; }
+
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+
+    .form-card h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-card h2::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 16px;
+      background: var(--color-brand);
+      border-radius: 2px;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-row.single { grid-template-columns: 1fr; }
+
+    .field input::placeholder { color: var(--muted); }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .form-msg { font-size: 13px; min-height: 20px; }
+    .form-msg.error { color: var(--color-error); }
+    .form-msg.success { color: var(--color-success); }
+
+    .btn-primary {
+      padding: 10px 24px;
+      background: var(--color-brand);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { background: var(--color-brand-hover); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary.full { width: 100%; justify-content: center; }
+
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 14px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+
+    .count-badge {
+      background: var(--color-brand-light);
+      color: var(--color-brand);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+
+    .tab-btn {
+      padding: 5px 14px;
+      border-radius: 100px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab-btn:hover { border-color: var(--color-brand); color: var(--color-brand); }
+    .tab-btn.active { background: var(--color-brand); border-color: var(--color-brand); color: #fff; }
+
+    .link-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .link-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.15s;
+    }
+    .link-card:hover { border-color: var(--color-brand); }
+
+    .link-info { flex: 1; min-width: 0; }
+    .link-name { font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .link-url {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .link-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 100px;
+      background: var(--color-brand-light);
+      color: var(--color-brand);
+      flex-shrink: 0;
+    }
+
+    .link-actions { display: flex; gap: 5px; flex-shrink: 0; }
+
+    .btn-sm {
+      padding: 5px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-sm:hover { border-color: var(--color-brand); color: var(--color-brand); }
+    .btn-sm.danger:hover { background: #fef2f2; border-color: var(--color-error); color: var(--color-error); }
+    .btn-sm.copy-btn { background: var(--color-brand); border-color: var(--color-brand); color: #fff; }
+    .btn-sm.copy-btn:hover { background: var(--color-brand-hover); border-color: var(--color-brand-hover); }
+    .btn-sm.copy-btn.copied { background: var(--color-success); border-color: var(--color-success); }
+
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 13px; }
+
+    .skeleton-row {
+      height: 64px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--line) 25%, #f0eeec 50%, var(--line) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      margin-bottom: 8px;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(41,37,36,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .confirm-dialog {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .confirm-dialog h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .confirm-dialog p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+    .btn-secondary {
+      padding: 9px 18px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+
+    .btn-danger {
+      padding: 9px 20px;
+      background: var(--color-error);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--ink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 100px;
+      opacity: 0;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      pointer-events: none;
+      z-index: 300;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    footer { text-align: center; padding: 20px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); }
+
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+      .header-right .clock-block { display: none; }
+      .link-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="logo-placeholder">🏨</div>
+      <div class="brand-block">
+        <span class="brand-eyebrow">Marketing Team</span>
+        <span class="brand-name">Office Desk</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="clock-block">
+        <div id="clock-date">—</div>
+        <div id="clock-time">--:--</div>
+      </div>
+      <a class="btn-back" href="index.html">← Kembali</a>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="config-banner" id="configBanner">
+      ⚠ API URL not configured. Open <code>config.js</code> and set <code>API_URL</code> to your deployed
+      Google Apps Script Web App URL.
+    </div>
+
+    <!-- LOGIN GATE -->
+    <div id="loginGate">
+      <div class="login-card">
+        <h2>Admin Login</h2>
+        <p>Masuk untuk mengelola link bank.</p>
+
+        <div class="field">
+          <label for="loginUser">Username</label>
+          <input id="loginUser" type="text" placeholder="Username">
+        </div>
+        <div class="field">
+          <label for="loginPass">Password</label>
+          <input id="loginPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter') doLogin()">
+        </div>
+
+        <div id="loginError"></div>
+
+        <button class="btn-primary full" onclick="doLogin()">Masuk</button>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel">
+      <div class="headline">
+        <h1>The Seminyak <span>Link Bank</span> — Admin</h1>
+        <span class="admin-badge">⚙ Admin Panel</span>
+      </div>
+
+      <!-- ADD / EDIT FORM -->
+      <div class="form-card">
+        <h2 id="formTitle">Tambah Link Baru</h2>
+
+        <input type="hidden" id="editId" value="">
+
+        <div class="form-row">
+          <div class="field">
+            <label for="inputName">Nama</label>
+            <input type="text" id="inputName" placeholder="Contoh: Menu Restaurant Bawah">
+          </div>
+          <div class="field">
+            <label for="inputCategory">Kategori</label>
+            <select id="inputCategory">
+              <option value="">— Pilih kategori —</option>
+              <option value="General">General</option>
+              <option value="Food & Beverage">Food & Beverage</option>
+              <option value="Kahyangan Spa">Kahyangan Spa</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="field">
+            <label for="inputLink">Link URL</label>
+            <input type="url" id="inputLink" placeholder="https://...">
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <span class="form-msg" id="formMsg"></span>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn-secondary" id="cancelEditBtn" style="display:none" onclick="cancelEdit()">Batal Edit</button>
+            <button class="btn-primary" id="submitBtn" onclick="submitLink()">
+              <span id="submitLabel">Simpan</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="section-header">
+        <div class="section-title">
+          Semua Link
+          <span class="count-badge" id="countBadge">0</span>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="tab-btn active" data-cat="All" onclick="filterLinks('All')">All</button>
+        <button class="tab-btn" data-cat="General" onclick="filterLinks('General')">General</button>
+        <button class="tab-btn" data-cat="Food & Beverage" onclick="filterLinks('Food & Beverage')">Food & Beverage</button>
+        <button class="tab-btn" data-cat="Kahyangan Spa" onclick="filterLinks('Kahyangan Spa')">Kahyangan Spa</button>
+        <button class="tab-btn" data-cat="Others" onclick="filterLinks('Others')">Others</button>
+      </div>
+
+      <div id="linkList">
+        <div class="skeleton-row"></div>
+        <div class="skeleton-row"></div>
+        <div class="skeleton-row"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Created by yog – 2026</footer>
+
+  <div id="toast"></div>
+
+  <!-- config.js defines window.API_URL — edit that file with your Apps Script Web App URL -->
+  <script src="config.js"></script>
+  <script>
+    // ── CLOCK ──
+    function updateClock() {
+      const now = new Date();
+      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      document.getElementById('clock-date').textContent =
+        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+      document.getElementById('clock-time').textContent =
+        now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ── CONFIG CHECK ──
+    if (!window.API_URL || window.API_URL.indexOf('PASTE_YOUR') !== -1) {
+      document.getElementById('configBanner').style.display = 'block';
+    }
+
+    // ── SESSION (very light client-side gate; see note in README) ──
+    const SESSION_KEY = 'seminyak_admin_session';
+
+    function isLoggedIn() {
+      return sessionStorage.getItem(SESSION_KEY) === 'true';
+    }
+
+    function showAdminPanel() {
+      document.getElementById('loginGate').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      loadLinks();
+    }
+
+    if (isLoggedIn()) showAdminPanel();
+
+    // ── LOGIN ──
+    function doLogin() {
+      const username = document.getElementById('loginUser').value.trim();
+      const password = document.getElementById('loginPass').value;
+      const errEl = document.getElementById('loginError');
+
+      if (!username || !password) {
+        errEl.textContent = 'Username dan password wajib diisi.';
+        return;
+      }
+
+      errEl.style.color = 'var(--muted)';
+      errEl.textContent = 'Memeriksa...';
+
+      fetch(window.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
+        body: JSON.stringify({ action: 'validateAdmin', username, password })
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            sessionStorage.setItem(SESSION_KEY, 'true');
+            errEl.style.color = 'var(--color-success)';
+            errEl.textContent = 'Login berhasil!';
+            setTimeout(showAdminPanel, 400);
+          } else {
+            errEl.style.color = 'var(--color-error)';
+            errEl.textContent = result.message || 'Username/password salah';
+          }
+        })
+        .catch(() => {
+          errEl.style.color = 'var(--color-error)';
+          errEl.textContent = 'Terjadi kesalahan. Coba lagi.';
+        });
+    }
+
+    // ── STATE ──
+    let allLinks = [];
+    let activeCategory = 'All';
+
+    // ── LOAD ──
+    function loadLinks() {
+      fetch(`${window.API_URL}?action=getLinks&category=All`)
+        .then(res => res.json())
+        .then(links => {
+          allLinks = Array.isArray(links) ? links : [];
+          renderLinks(allLinks);
+          document.getElementById('countBadge').textContent = allLinks.length;
+        })
+        .catch(() => {
+          document.getElementById('linkList').innerHTML = '<div class="empty-state">Gagal memuat data.</div>';
+        });
+    }
+
+    // ── FILTER ──
+    function filterLinks(category) {
+      activeCategory = category;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === category);
+      });
+      const filtered = category === 'All'
+        ? allLinks
+        : allLinks.filter(l => l.category === category);
+      renderLinks(filtered);
+    }
+
+    // ── RENDER ──
+    function renderLinks(links) {
+      const container = document.getElementById('linkList');
+      if (!links.length) {
+        container.innerHTML = '<div class="empty-state">Belum ada link di kategori ini.</div>';
+        return;
+      }
+
+      const html = links.map(item => `
+        <div class="link-card" id="card-${escAttr(item.id)}">
+          <div class="link-info">
+            <div class="link-name">${escHtml(item.name)}</div>
+            <div class="link-url">${escHtml(item.link)}</div>
+          </div>
+          <span class="link-badge">${escHtml(item.category)}</span>
+          <div class="link-actions">
+            <button class="btn-sm" onclick="startEdit('${escAttr(item.id)}')">Edit</button>
+            <button class="btn-sm danger" onclick="confirmDelete('${escAttr(item.id)}', '${escAttr(item.name)}')">Hapus</button>
+            <button class="btn-sm" onclick="openLink('${escAttr(item.link)}')">Open</button>
+            <button class="btn-sm copy-btn" id="cpbtn-${escAttr(item.id)}"
+              onclick="copyLink('${escAttr(item.link)}', '${escAttr(item.id)}')">Copy</button>
+          </div>
+        </div>`).join('');
+
+      container.innerHTML = `<div class="link-list">${html}</div>`;
+    }
+
+    // ── SUBMIT (Add or Update) ──
+    function submitLink() {
+      const id = document.getElementById('editId').value;
+      const name = document.getElementById('inputName').value.trim();
+      const link = document.getElementById('inputLink').value.trim();
+      const category = document.getElementById('inputCategory').value;
+      const msgEl = document.getElementById('formMsg');
+      const btn = document.getElementById('submitBtn');
+      const label = document.getElementById('submitLabel');
+
+      msgEl.className = 'form-msg';
+      msgEl.textContent = '';
+
+      if (!name || !link || !category) {
+        msgEl.className = 'form-msg error';
+        msgEl.textContent = 'Semua field wajib diisi.';
+        return;
+      }
+
+      btn.disabled = true;
+      label.textContent = 'Menyimpan...';
+
+      const action = id ? 'updateLink' : 'addLink';
+      const payload = id
+        ? { action, id, name, link, category }
+        : { action, name, link, category };
+
+      fetch(window.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(result => {
+          btn.disabled = false;
+          label.textContent = id ? 'Update' : 'Simpan';
+          if (result.success) {
+            msgEl.className = 'form-msg success';
+            msgEl.textContent = id ? 'Link berhasil diperbarui!' : 'Link berhasil ditambahkan!';
+            cancelEdit();
+            loadLinks();
+            showToast(id ? 'Link diperbarui ✓' : 'Link ditambahkan ✓');
+          } else {
+            msgEl.className = 'form-msg error';
+            msgEl.textContent = result.message;
+          }
+        })
+        .catch(() => {
+          btn.disabled = false;
+          label.textContent = id ? 'Update' : 'Simpan';
+          msgEl.className = 'form-msg error';
+          msgEl.textContent = 'Terjadi kesalahan.';
+        });
+    }
+
+    // ── EDIT ──
+    function startEdit(id) {
+      const item = allLinks.find(l => l.id === id);
+      if (!item) return;
+
+      document.getElementById('editId').value = item.id;
+      document.getElementById('inputName').value = item.name;
+      document.getElementById('inputLink').value = item.link;
+      document.getElementById('inputCategory').value = item.category;
+      document.getElementById('formTitle').textContent = 'Edit Link';
+      document.getElementById('submitLabel').textContent = 'Update';
+      document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+      document.getElementById('formMsg').textContent = '';
+
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function cancelEdit() {
+      clearForm();
+      document.getElementById('formTitle').textContent = 'Tambah Link Baru';
+      document.getElementById('submitLabel').textContent = 'Simpan';
+      document.getElementById('cancelEditBtn').style.display = 'none';
+      document.getElementById('formMsg').textContent = '';
+    }
+
+    function clearForm() {
+      document.getElementById('editId').value = '';
+      document.getElementById('inputName').value = '';
+      document.getElementById('inputLink').value = '';
+      document.getElementById('inputCategory').value = '';
+    }
+
+    // ── DELETE CONFIRM ──
+    function confirmDelete(id, name) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML = `
+        <div class="confirm-dialog">
+          <h3>Hapus Link?</h3>
+          <p>Anda akan menghapus "<strong>${escHtml(name)}</strong>". Tindakan ini tidak dapat dibatalkan.</p>
+          <div style="display:flex;justify-content:center;gap:8px">
+            <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Batal</button>
+            <button class="btn-danger" onclick="deleteLinkAction('${escAttr(id)}', this)">Ya, Hapus</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+    }
+
+    function deleteLinkAction(id, btn) {
+      btn.textContent = 'Menghapus...';
+      btn.disabled = true;
+
+      fetch(window.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'deleteLink', id })
+      })
+        .then(res => res.json())
+        .then(result => {
+          document.querySelector('.modal-overlay')?.remove();
+          if (result.success) {
+            loadLinks();
+            showToast('Link dihapus.');
+          } else {
+            showToast('Gagal menghapus: ' + result.message);
+          }
+        })
+        .catch(() => {
+          document.querySelector('.modal-overlay')?.remove();
+          showToast('Terjadi kesalahan.');
+        });
+    }
+
+    // ── OPEN / COPY ──
+    function openLink(url) { window.open(url, '_blank', 'noopener,noreferrer'); }
+
+    function copyLink(url, id) {
+      navigator.clipboard.writeText(url).then(function() {
+        const btn = document.getElementById('cpbtn-' + id);
+        if (btn) {
+          btn.textContent = '✓ Copied';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        }
+        showToast('Link disalin!');
+      }).catch(function() {
+        const ta = document.createElement('textarea');
+        ta.value = url; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Link disalin!');
+      });
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ── ESCAPE HELPERS ──
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function escAttr(str) { return String(str).replace(/'/g, "\\'"); }
+  </script>
+</body>
+</html>
