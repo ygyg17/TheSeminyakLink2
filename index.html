@@ -317,10 +317,29 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 480px) {
-      .link-card { flex-wrap: wrap; }
-      .btn-action { padding: 5px 10px; }
-      .header-right { display: none; }
-    }
+  .link-card {
+    flex-wrap: nowrap;        /* jangan wrap */
+    gap: 8px;
+  }
+
+  .link-name {
+    font-size: 13px;
+    flex: 1;
+    min-width: 0;             /* penting agar ellipsis bekerja */
+  }
+
+  /* Sembunyikan badge kategori di mobile — filter tab sudah cukup */
+  .link-category-badge {
+    display: none !important;
+  }
+
+  .btn-action {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .header-right { display: none; }
+}
   </style>
 </head>
 <body>
