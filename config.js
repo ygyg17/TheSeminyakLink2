@@ -9,4 +9,4 @@
 //
 // Step-by-step instructions for getting this URL are in README.md.
 //
-window.API_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+window.API_URL = "https://script.google.com/macros/s/AKfycbz_AlZTjEjfpabEsRxLB_DDGOH6hUQMBYegGv1aakS_Zz4qlqICqe4nHdfWugJ5HQLWEw/exec";
