@@ -387,19 +387,15 @@
     <!-- FILTER -->
     <div class="filter-bar" id="filterBar">
       <button class="tab-btn active" data-cat="All" onclick="filterLinks('All')">All</button>
-      <button class="tab-btn" data-cat="General" onclick="filterLinks('General')">General</button>
-      <button class="tab-btn" data-cat="Food & Beverage" onclick="filterLinks('Food & Beverage')">Food & Beverage</button>
-      <button class="tab-btn" data-cat="Kahyangan Spa" onclick="filterLinks('Kahyangan Spa')">Kahyangan Spa</button>
-      <button class="tab-btn" data-cat="Others" onclick="filterLinks('Others')">Others</button>
-    
-    <div class="search-box">
-  <input
-    type="text"
-    id="searchInput"
-    class="search-input"
-    placeholder="Search link..."
-    onkeyup="searchLinks()">
-</div>
+      
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search link..."
+          onkeyup="searchLinks()">
+      </div>
     </div>
 
     <!-- LIST -->
@@ -563,7 +559,31 @@
         .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
     function escAttr(str) { return String(str).replace(/'/g, "\\'"); }
-
+// ── LOAD CATEGORIES (Mengambil kategori secara dinamis) ──
+    function loadCategories() {
+      fetch(`${window.API_URL}?action=getCategories`)
+        .then(res => res.json())
+        .then(categories => {
+          const filterBar = document.getElementById('filterBar');
+          const searchBox = filterBar.querySelector('.search-box');
+          
+          // Hapus tombol kategori lama (jika ada) selain tombol 'All'
+          filterBar.querySelectorAll('.tab-btn:not([data-cat="All"])').forEach(btn => btn.remove());
+          
+          // Render tombol kategori baru dari database
+          categories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'tab-btn';
+            btn.setAttribute('data-cat', cat);
+            btn.onclick = function() { filterLinks(cat); };
+            btn.textContent = cat;
+            
+            // Masukkan tombol baru tepat sebelum elemen search box
+            filterBar.insertBefore(btn, searchBox);
+          });
+        })
+        .catch(err => console.error('Gagal memuat kategori:', err));
+    }
     // ── INIT ──
     loadLinks();
   </script>
