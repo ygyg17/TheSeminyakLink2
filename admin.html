@@ -202,7 +202,7 @@
 
     #loginError { font-size: 12px; color: var(--color-error); min-height: 18px; margin-bottom: 6px; }
 
-    /* ── ADMIN PANEL (hidden until logged in) ── */
+    /* ── ADMIN PANEL ── */
     #adminPanel { display: none; }
 
     .form-card {
@@ -444,7 +444,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
     <div class="header-left">
       <div class="logo-placeholder">🏨</div>
@@ -462,14 +461,11 @@
     </div>
   </header>
 
-  <!-- MAIN -->
   <main>
     <div class="config-banner" id="configBanner">
-      ⚠ API URL not configured. Open <code>config.js</code> and set <code>API_URL</code> to your deployed
-      Google Apps Script Web App URL.
+      ⚠ API URL not configured. Open <code>config.js</code> and set <code>API_URL</code> to your deployed Google Apps Script Web App URL.
     </div>
 
-    <!-- LOGIN GATE -->
     <div id="loginGate">
       <div class="login-card">
         <h2>Admin Login</h2>
@@ -490,14 +486,12 @@
       </div>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="adminPanel">
       <div class="headline">
         <h1>The Seminyak <span>Link Bank</span> — Admin</h1>
         <span class="admin-badge">⚙ Admin Panel</span>
       </div>
 
-      <!-- ADD / EDIT FORM -->
       <div class="form-card">
         <h2 id="formTitle">Tambah Link Baru</h2>
 
@@ -509,7 +503,6 @@
             <input type="text" id="inputName" placeholder="Contoh: Menu Restaurant Bawah">
           </div>
           <div class="field">
-            <div class="field">
             <label for="inputCategory">Kategori</label>
             <div style="display: flex; gap: 8px;">
               <select id="inputCategory" style="flex: 1;">
@@ -542,7 +535,6 @@
         </div>
       </div>
 
-      <!-- LIST -->
       <div class="section-header">
         <div class="section-title">
           Semua Link
@@ -570,7 +562,6 @@
 
   <div id="toast"></div>
 
-  <!-- config.js defines window.API_URL — edit that file with your Apps Script Web App URL -->
   <script src="config.js"></script>
   <script>
     // ── CLOCK ──
@@ -591,9 +582,8 @@
       document.getElementById('configBanner').style.display = 'block';
     }
 
-    // ── SESSION (very light client-side gate; see note in README) ──
+    // ── SESSION (very light client-side gate) ──
     const SESSION_KEY = 'seminyak_admin_session';
-
     function isLoggedIn() {
       return sessionStorage.getItem(SESSION_KEY) === 'true';
     }
@@ -602,6 +592,7 @@
       document.getElementById('loginGate').style.display = 'none';
       document.getElementById('adminPanel').style.display = 'block';
       loadLinks();
+      loadAdminCategories(); // Memuat kategori dinamis saat panel tampil
     }
 
     if (isLoggedIn()) showAdminPanel();
@@ -619,7 +610,6 @@
 
       errEl.style.color = 'var(--muted)';
       errEl.textContent = 'Memeriksa...';
-
       fetch(window.API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
@@ -647,7 +637,7 @@
     let allLinks = [];
     let activeCategory = 'All';
 
-    // ── LOAD ──
+    // ── LOAD LINKS ──
     function loadLinks() {
       fetch(`${window.API_URL}?action=getLinks&category=All`)
         .then(res => res.json())
@@ -659,6 +649,90 @@
         .catch(() => {
           document.getElementById('linkList').innerHTML = '<div class="empty-state">Gagal memuat data.</div>';
         });
+    }
+
+    // ── LOAD CATEGORIES UNTUK ADMIN ──
+    function loadAdminCategories() {
+      fetch(`${window.API_URL}?action=getCategories`)
+        .then(res => res.json())
+        .then(categories => {
+          const categoryList = Array.isArray(categories) ? categories : ["General", "Food & Beverage", "Kahyangan Spa", "Others"];
+
+          // 1. Update Dropdown Form
+          const select = document.getElementById('inputCategory');
+          const currentVal = select.value;
+          
+          select.innerHTML = '<option value="">— Pilih kategori —</option>';
+          categoryList.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            select.appendChild(opt);
+          });
+          
+          if (currentVal) select.value = currentVal;
+
+          // 2. Update Filter Bar di Admin Panel
+          const filterBar = document.querySelector('.filter-bar');
+          if (filterBar) {
+            filterBar.querySelectorAll('.tab-btn:not([data-cat="All"])').forEach(btn => btn.remove());
+            
+            categoryList.forEach(cat => {
+              const btn = document.createElement('button');
+              btn.className = 'tab-btn';
+              btn.setAttribute('data-cat', cat);
+              btn.onclick = function() { filterLinks(cat); };
+              btn.textContent = cat;
+              filterBar.appendChild(btn);
+            });
+          }
+        })
+        .catch(err => {
+          console.error('Gagal memuat kategori:', err);
+        });
+    }
+
+    // ── TAMBAH KATEGORI BARU ──
+    function addNewCategory() {
+      const newCat = prompt("Masukkan nama kategori baru:");
+      if (!newCat || newCat.trim() === '') return;
+
+      const catName = newCat.trim();
+      const select = document.getElementById('inputCategory');
+      
+      let exists = false;
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value.toLowerCase() === catName.toLowerCase()) {
+          exists = true;
+          break;
+        }
+      }
+
+      if (!exists) {
+        // Tambahkan opsi baru ke dropdown select
+        const option = document.createElement('option');
+        option.value = catName;
+        option.textContent = catName;
+        select.appendChild(option);
+
+        // Tambahkan tombol tab baru ke filter bar admin
+        const filterBar = document.querySelector('.filter-bar');
+        if (filterBar) {
+          const btn = document.createElement('button');
+          btn.className = 'tab-btn';
+          btn.setAttribute('data-cat', catName);
+          btn.onclick = function() { filterLinks(catName); };
+          btn.textContent = catName;
+          filterBar.appendChild(btn);
+        }
+
+        // Set otomatis terpilih di form
+        select.value = catName;
+        showToast('Kategori "' + catName + '" ditambahkan.');
+      } else {
+        select.value = catName;
+        showToast('Kategori sudah tersedia.');
+      }
     }
 
     // ── FILTER ──
@@ -696,7 +770,6 @@
               onclick="copyLink('${escAttr(item.link)}', '${escAttr(item.id)}')">Copy</button>
           </div>
         </div>`).join('');
-
       container.innerHTML = `<div class="link-list">${html}</div>`;
     }
 
@@ -712,7 +785,6 @@
 
       msgEl.className = 'form-msg';
       msgEl.textContent = '';
-
       if (!name || !link || !category) {
         msgEl.className = 'form-msg error';
         msgEl.textContent = 'Semua field wajib diisi.';
@@ -721,12 +793,10 @@
 
       btn.disabled = true;
       label.textContent = 'Menyimpan...';
-
       const action = id ? 'updateLink' : 'addLink';
       const payload = id
         ? { action, id, name, link, category }
         : { action, name, link, category };
-
       fetch(window.API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -806,7 +876,6 @@
     function deleteLinkAction(id, btn) {
       btn.textContent = 'Menghapus...';
       btn.disabled = true;
-
       fetch(window.API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -864,52 +933,6 @@
         .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
     function escAttr(str) { return String(str).replace(/'/g, "\\'"); }
-// ── TAMBAH KATEGORI BARU ──
-    function addNewCategory() {
-      // 1. Tampilkan dialog untuk memasukkan nama kategori
-      const newCat = prompt("Masukkan nama kategori baru:");
-      
-      // 2. Batalkan jika input kosong atau di-cancel
-      if (!newCat || newCat.trim() === '') return;
-      const catName = newCat.trim();
-      const select = document.getElementById('inputCategory');
-      
-      // 3. Cek apakah kategori sudah ada di dalam dropdown
-      let exists = false;
-      for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].value.toLowerCase() === catName.toLowerCase()) {
-          exists = true;
-          break;
-        }
-      }
-
-      if (!exists) {
-        // 4. Tambahkan opsi baru ke dropdown select
-        const option = document.createElement('option');
-        option.value = catName;
-        option.textContent = catName;
-        select.appendChild(option);
-
-        // 5. Tambahkan tombol tab baru ke filter bar admin
-        const filterBar = document.querySelector('.filter-bar');
-        if (filterBar) {
-          const btn = document.createElement('button');
-          btn.className = 'tab-btn';
-          btn.setAttribute('data-cat', catName);
-          btn.onclick = function() { filterLinks(catName); };
-          btn.textContent = catName;
-          filterBar.appendChild(btn);
-        }
-
-        // 6. Pilih kategori baru tersebut secara otomatis di form
-        select.value = catName;
-        showToast('Kategori "' + catName + '" berhasil ditambahkan.');
-      } else {
-        // Jika sudah ada, langsung arahkan pilihan ke kategori tersebut
-        select.value = catName;
-        showToast('Kategori tersebut sudah tersedia.');
-      }
-    }  
   </script>
 </body>
 </html>
