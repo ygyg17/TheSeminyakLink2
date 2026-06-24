@@ -44,31 +44,32 @@
     }
 
     .header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.header-request{
-  margin-left:12px;
-  padding:8px 14px;
-  border:1px solid rgba(186,143,46,.25);
-  background:rgba(186,143,46,.08);
-  color:var(--color-brand);
-  text-decoration:none;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:600;
-  transition:all .2s ease;
-  white-space:nowrap;
-}
+    .header-request {
+      margin-left: 12px;
+      padding: 8px 14px;
+      border: 1px solid rgba(186,143,46,.25);
+      background: rgba(186,143,46,.08);
+      color: var(--color-brand);
+      text-decoration: none;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
 
-.header-request:hover{
-  background:var(--color-brand);
-  color:#fff;
-  border-color:var(--color-brand);
-  transform:translateY(-1px);
-}
+    .header-request:hover {
+      background: var(--color-brand);
+      color: #fff;
+      border-color: var(--color-brand);
+      transform: translateY(-1px);
+    }
+
     .brand-block {
       display: flex;
       flex-direction: column;
@@ -129,7 +130,7 @@
       max-width: 520px;
     }
 
-    /* ── CONFIG BANNER (shown only if API URL is not set) ── */
+    /* ── CONFIG BANNER ── */
     .config-banner {
       background: #fef2f2;
       border: 1px solid #fecaca;
@@ -148,33 +149,33 @@
     }
 
     /* ── FILTER TABS ── */
-    .filter-bar{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:24px;
-}
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
 
-.search-box{
-  margin-left:0;
-}
+    .search-box {
+      margin-left: 0;
+    }
 
-.search-input{
-  width:220px;
-  padding:8px 14px;
-  border:1px solid var(--line);
-  border-radius:999px;
-  font-size:13px;
-  font-family:'Inter',sans-serif;
-  outline:none;
-  transition:all .2s ease;
-}
+    .search-input {
+      width: 220px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: all .2s ease;
+    }
 
-.search-input:focus{
-  border-color:var(--color-brand);
-  box-shadow:0 0 0 3px var(--color-brand-light);
-}
+    .search-input:focus {
+      border-color: var(--color-brand);
+      box-shadow: 0 0 0 3px var(--color-brand-light);
+    }
 
     .tab-btn {
       padding: 6px 16px;
@@ -316,63 +317,39 @@
     footer a:hover { text-decoration: underline; }
 
     /* ── RESPONSIVE ── */
-  @media (max-width: 480px) {
-  .link-card {
-    flex-wrap: nowrap;        /* jangan wrap */
-    gap: 8px;
-  }
-
-  .link-name {
-    font-size: 13px;
-    flex: 1;
-    min-width: 0;             /* penting agar ellipsis bekerja */
-  }
-
-  /* Sembunyikan badge kategori di mobile — filter tab sudah cukup */
-  .link-category-badge {
-    display: none !important;
-  }
-
-  .btn-action {
-    padding: 5px 10px;
-    font-size: 11px;
-  }
-
-  .header-right { display: none; }
-}
+    @media (max-width: 480px) {
+      .link-card { flex-wrap: nowrap; gap: 8px; }
+      .link-name { font-size: 13px; flex: 1; min-width: 0; }
+      .link-category-badge { display: none !important; }
+      .btn-action { padding: 5px 10px; font-size: 11px; }
+      .header-right { display: none; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
-  <div class="header-left">
-    <img src="https://cdn-5d8995b3f911c90950a6130b.closte.com/wp-content/uploads/2024/08/the-seminyak-logo-aug24v1.png"
-         alt="The Seminyak"
-         style="width:40px;height:40px;object-fit:contain;border-radius:8px;">
+    <div class="header-left">
+      <img src="https://cdn-5d8995b3f911c90950a6130b.closte.com/wp-content/uploads/2024/08/the-seminyak-logo-aug24v1.png"
+           alt="The Seminyak"
+           style="width:40px;height:40px;object-fit:contain;border-radius:8px;">
 
-    <div class="brand-block">
-      <span class="brand-eyebrow">Marketing Team</span>
-      <span class="brand-name">Office Desk</span>
+      <div class="brand-block">
+        <span class="brand-eyebrow">Marketing Team</span>
+        <span class="brand-name">Office Desk</span>
+      </div>
+
+      <a href="https://forms.gle/7H32KvAJ279XRCuTA" target="_blank" class="header-request">
+        Request Design
+      </a>
     </div>
 
-    <a
-      href="https://forms.gle/7H32KvAJ279XRCuTA"
-      target="_blank"
-      class="header-request"
-    >
-      Request Design
-    </a>
+    <div class="header-right">
+      <div id="clock-date">—</div>
+      <div id="clock-time">--:--</div>
+    </div>
+  </header>
 
-  </div>
-
-  <div class="header-right">
-    <div id="clock-date">—</div>
-    <div id="clock-time">--:--</div>
-  </div>
-</header>
-
-  <!-- MAIN -->
   <main>
     <div class="headline">
       <h1>The Seminyak <span>Link Bank</span></h1>
@@ -380,25 +357,17 @@
     </div>
 
     <div class="config-banner" id="configBanner">
-      ⚠ API URL not configured. Open <code>config.js</code> and set <code>API_URL</code> to your deployed
-      Google Apps Script Web App URL.
+      ⚠ API URL not configured. Open <code>config.js</code> and set <code>API_URL</code> to your deployed Google Apps Script Web App URL.
     </div>
 
-    <!-- FILTER -->
     <div class="filter-bar" id="filterBar">
       <button class="tab-btn active" data-cat="All" onclick="filterLinks('All')">All</button>
       
       <div class="search-box">
-        <input
-          type="text"
-          id="searchInput"
-          class="search-input"
-          placeholder="Search link..."
-          onkeyup="searchLinks()">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search link..." onkeyup="searchLinks()">
       </div>
     </div>
 
-    <!-- LIST -->
     <div id="linkList">
       <div class="skeleton">
         <div class="skeleton-row"></div>
@@ -408,14 +377,13 @@
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer>
-    Created by yog – 2026 &nbsp;|&nbsp; <a href="admin.html" id="adminLoginLink">Add New Link</a>
+    Created by yog – 2026 &nbsp;|&nbsp;
+    <a href="admin.html" id="adminLoginLink">Add New Link</a>
   </footer>
 
   <div id="toast"></div>
 
-  <!-- config.js defines window.API_URL — edit that file with your Apps Script Web App URL -->
   <script src="config.js"></script>
   <script>
     // ── CLOCK ──
@@ -440,7 +408,7 @@
     let allLinks = [];
     let activeCategory = 'All';
 
-    // ── LOAD LINKS (fetch instead of google.script.run) ──
+    // ── LOAD LINKS ──
     function loadLinks() {
       fetch(`${window.API_URL}?action=getLinks&category=All`)
         .then(res => res.json())
@@ -449,50 +417,75 @@
           renderLinks(allLinks, activeCategory === 'All');
         })
         .catch(() => {
-          document.getElementById('linkList').innerHTML =
-            '<div class="empty-state">Gagal memuat data. Silakan refresh halaman.</div>';
+          document.getElementById('linkList').innerHTML = '<div class="empty-state">Gagal memuat data. Silakan refresh halaman.</div>';
+        });
+    }
+
+    // ── LOAD CATEGORIES (Aman dengan Cadangan Otomatis) ──
+    function loadCategories() {
+      fetch(`${window.API_URL}?action=getCategories`)
+        .then(res => res.json())
+        .then(categories => {
+          const filterBar = document.getElementById('filterBar');
+          const searchBox = filterBar.querySelector('.search-box');
+          
+          // Jika API mengembalikan data yang bukan array (misal error), gunakan cadangan
+          const categoryList = Array.isArray(categories) ? categories : ["General", "Food & Beverage", "Kahyangan Spa", "Others"];
+          
+          // Bersihkan tombol filter lama selain tombol 'All'
+          filterBar.querySelectorAll('.tab-btn:not([data-cat="All"])').forEach(btn => btn.remove());
+          
+          // Gambar ulang tombol filter secara dinamis
+          categoryList.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'tab-btn';
+            btn.setAttribute('data-cat', cat);
+            btn.onclick = function() { filterLinks(cat); };
+            btn.textContent = cat;
+            
+            // Selipkan sebelum kotak pencarian
+            filterBar.insertBefore(btn, searchBox);
+          });
+        })
+        .catch(err => {
+          console.error('API belum siap atau error, menggunakan filter bawaan:', err);
+          
+          // Tampilkan filter cadangan jika koneksi ke Google Sheets gagal
+          const filterBar = document.getElementById('filterBar');
+          const searchBox = filterBar.querySelector('.search-box');
+          const defaultCats = ["General", "Food & Beverage", "Kahyangan Spa", "Others"];
+          
+          filterBar.querySelectorAll('.tab-btn:not([data-cat="All"])').forEach(btn => btn.remove());
+          defaultCats.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'tab-btn';
+            btn.setAttribute('data-cat', cat);
+            btn.onclick = function() { filterLinks(cat); };
+            btn.textContent = cat;
+            filterBar.insertBefore(btn, searchBox);
+          });
         });
     }
 
     // ── FILTER ──
     function filterLinks(category){
+      activeCategory = category;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === category);
+      });
+      searchLinks();
+    }
 
-  activeCategory = category;
-
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.toggle(
-      'active',
-      btn.dataset.cat === category
-    );
-  });
-
-  searchLinks();
-
-}
     function searchLinks(){
-
-  const keyword = document
-    .getElementById('searchInput')
-    .value
-    .toLowerCase();
-
-  let filtered = activeCategory === 'All'
-    ? allLinks
-    : allLinks.filter(
-        l => l.category === activeCategory
-      );
-
-  filtered = filtered.filter(item =>
-    item.name.toLowerCase().includes(keyword)
-  );
-
-  renderLinks(filtered, activeCategory === 'All');
-}
+      const keyword = document.getElementById('searchInput').value.toLowerCase();
+      let filtered = activeCategory === 'All' ? allLinks : allLinks.filter(l => l.category === activeCategory);
+      filtered = filtered.filter(item => item.name.toLowerCase().includes(keyword));
+      renderLinks(filtered, activeCategory === 'All');
+    }
 
     // ── RENDER ──
     function renderLinks(links, showBadge) {
       const container = document.getElementById('linkList');
-
       if (!links.length) {
         container.innerHTML = `
           <div class="empty-state">
@@ -516,7 +509,6 @@
               onclick="copyLink('${escAttr(item.link)}', '${escAttr(item.id)}')">Copy</button>
           </div>
         </div>`).join('');
-
       container.innerHTML = `<div class="link-list">${html}</div>`;
     }
 
@@ -554,38 +546,13 @@
 
     // ── ESCAPE HELPERS ──
     function escHtml(str) {
-      return String(str)
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
     function escAttr(str) { return String(str).replace(/'/g, "\\'"); }
-// ── LOAD CATEGORIES (Mengambil kategori secara dinamis) ──
-    function loadCategories() {
-      fetch(`${window.API_URL}?action=getCategories`)
-        .then(res => res.json())
-        .then(categories => {
-          const filterBar = document.getElementById('filterBar');
-          const searchBox = filterBar.querySelector('.search-box');
-          
-          // Hapus tombol kategori lama (jika ada) selain tombol 'All'
-          filterBar.querySelectorAll('.tab-btn:not([data-cat="All"])').forEach(btn => btn.remove());
-          
-          // Render tombol kategori baru dari database
-          categories.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.className = 'tab-btn';
-            btn.setAttribute('data-cat', cat);
-            btn.onclick = function() { filterLinks(cat); };
-            btn.textContent = cat;
-            
-            // Masukkan tombol baru tepat sebelum elemen search box
-            filterBar.insertBefore(btn, searchBox);
-          });
-        })
-        .catch(err => console.error('Gagal memuat kategori:', err));
-    }
+
     // ── INIT ──
     loadLinks();
+    loadCategories();
   </script>
 </body>
 </html>
